@@ -31,7 +31,7 @@ metrics:
     # The name of the metric in prometheus
   - prom_name: t
     # The name of the metric in a MQTT JSON message
-    mqtt_name: "uplink_message.decoded_payload.l"
+    mqtt_name: "uplink_message.decoded_payload.t"
     # The prometheus help text for this metric
     help: t
     # The prometheus type for this metric. Valid values are: "gauge" and "counter"
