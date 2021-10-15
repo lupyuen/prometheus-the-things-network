@@ -2,17 +2,20 @@
 
 To ingest MQTT Messages from The Things Network into Prometheus...
 
-```cmd
+```bash
+## Download mqtt2prometheus
 go get github.com/hikhvar/mqtt2prometheus
 
 ## For macOS and Linux:
-cd %GOPATH%\src\github.com\hikhvar\mqtt2prometheus
+cd %GOPATH%/src/github.com/hikhvar/mqtt2prometheus
 
 ## For Windows:
 cd %GOPATH%\src\github.com\hikhvar\mqtt2prometheus
 
+## Build mqtt2prometheus
 go build ./cmd
 
+## Run mqtt2prometheus
 go run ./cmd -log-level debug -config ttn-mqtt.yaml
 ```
 
