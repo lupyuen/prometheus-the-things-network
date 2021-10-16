@@ -217,53 +217,53 @@ And modify the `newTLSConfig` function as follows...
 
 ```go
 func newTLSConfig(cfg config.Config) (*tls.Config, error) {
-	certpool := x509.NewCertPool()
-	if cfg.MQTT.CACert != "" {
-		pemCerts, err := ioutil.ReadFile(cfg.MQTT.CACert)
-		if err != nil {
-			return nil, fmt.Errorf("failed to load ca_cert file: %w", err)
-		}
-		certpool.AppendCertsFromPEM(pemCerts)
-	}
+    certpool := x509.NewCertPool()
+    if cfg.MQTT.CACert != "" {
+        pemCerts, err := ioutil.ReadFile(cfg.MQTT.CACert)
+        if err != nil {
+            return nil, fmt.Errorf("failed to load ca_cert file: %w", err)
+        }
+        certpool.AppendCertsFromPEM(pemCerts)
+    }
 
     // Added this for debugging
     fmt.Printf("%#v\n", certpool)
 
     // We don't need to load the Client Cert
-	// cert, err := tls.LoadX509KeyPair(cfg.MQTT.ClientCert, cfg.MQTT.ClientKey)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed to load client certificate: %w", err)
-	// }
-	// cert.Leaf, err = x509.ParseCertificate(cert.Certificate[0])
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed to parse client certificate: %w", err)
-	// }
+    // cert, err := tls.LoadX509KeyPair(cfg.MQTT.ClientCert, cfg.MQTT.ClientKey)
+    // if err != nil {
+    // 	return nil, fmt.Errorf("failed to load client certificate: %w", err)
+    // }
+    // cert.Leaf, err = x509.ParseCertificate(cert.Certificate[0])
+    // if err != nil {
+    // 	return nil, fmt.Errorf("failed to parse client certificate: %w", err)
+    // }
 
-	return &tls.Config{
-		RootCAs:            certpool,
-		InsecureSkipVerify: false,
+    return &tls.Config{
+        RootCAs:            certpool,
+        InsecureSkipVerify: false,
 
         // We don't need to load the Client Cert
-		// Certificates:       []tls.Certificate{cert},
-	}, nil
+        // Certificates:       []tls.Certificate{cert},
+    }, nil
 }
 ```
 
 Edit [`ttn-mqtt.yaml`](ttn-mqtt.yaml) and configure MQTT as follows...
 
 ```yaml
-  ## Change au1.cloud.thethings.network to our MQTT Public Address
-  ## Use ssl://... instead of tcp://...
-  ## Port number is 8883 instead of 1883
-  server: ssl://au1.cloud.thethings.network:8883
+## Change au1.cloud.thethings.network to our MQTT Public Address
+## Use ssl://... instead of tcp://...
+## Port number is 8883 instead of 1883
+server:      ssl://au1.cloud.thethings.network:8883
 
-  ## For TLS CA Certificates
-  ca_cert: ttn.cer
-  client_cert: certs/xxxxx-certificate.pem.crt
-  client_key: certs/xxxxx-private.pem.key
+## For TLS CA Certificate
+ca_cert:     ttn.cer
+client_cert: certs/xxxxx-certificate.pem.crt
+client_key:  certs/xxxxx-private.pem.key
 ```
 
-(`client_cert` and `client_key` won't be used, but they must be uncommented)
+`client_cert` and `client_key` won't be used, but they must be uncommented.
 
 To get `ttn.cer`: Browse to your Region-Specific URL for The Things Network, like...
 
