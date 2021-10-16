@@ -10,7 +10,7 @@ https://github.com/lupyuen/cbor-the-things-network
 
 To ingest MQTT Messages from The Things Network into Prometheus...
 
-Download [`ttn-mqtt.yaml`](ttn-mqtt.yaml) and configure the MQTT Settings.
+Download [`ttn-mqtt.yaml`](ttn-mqtt.yaml) and configure the MQTT Settings and Metrics.
 
 Download and run `mqtt2prometheus`...
 
