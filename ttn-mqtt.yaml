@@ -16,16 +16,15 @@ mqtt:
   # MQTT QoS level
   qos: 0
 
-  # Optional: Regular expression to extract the device ID from the topic path. The default regular expression, assumes
-  # that the last "element" of the topic_path is the device id.
-  # The regular expression must contain a named capture group with the name deviceid
-  # For example the expression for tasamota based sensors is "tele/(?P<deviceid>.*)/.*"
-  # device_id_regex: "(.*/)?(?P<deviceid>.*)"
+  # Extract the device ID (eui-YOUR_DEVICE_EUI) from the topic path, which looks like...
+  # v3/luppy-application@ttn/devices/eui-YOUR_DEVICE_EUI/up
+  device_id_regex: "(.*/)?devices/(?P<deviceid>.*)/.*"
 
   # Optional: for TLS client certificates
   # ca_cert: certs/AmazonRootCA1.pem
   # client_cert: certs/xxxxx-certificate.pem.crt
   # client_key: certs/xxxxx-private.pem.key
+  
   # Optional: Used to specify ClientID. The default is <hostname>-<pid>
   # client_id: somedevice
 

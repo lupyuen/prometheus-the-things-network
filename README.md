@@ -120,7 +120,7 @@ We should see...
 ```text
 # HELP l Light Level
 # TYPE l gauge
-l{sensor="up",sensor_type="l",topic="v3/luppy-application@ttn/devices/eui-YOUR_DEVICE_EUI/up"} 4000 1634363600797
+l{sensor="eui-YOUR_DEVICE_EUI",sensor_type="l",topic="v3/luppy-application@ttn/devices/eui-YOUR_DEVICE_EUI/up"} 4000 1634364863274
 ...
 # HELP received_messages received messages per topic and status
 # TYPE received_messages counter
@@ -128,5 +128,5 @@ received_messages{status="success",topic="v3/luppy-application@ttn/devices/eui-Y
 ...
 # HELP t Temperature
 # TYPE t gauge
-t{sensor="up",sensor_type="t",topic="v3/luppy-application@ttn/devices/eui-YOUR_DEVICE_EUI/up"} 4952 1634363600797
+t{sensor="eui-YOUR_DEVICE_EUI",sensor_type="t",topic="v3/luppy-application@ttn/devices/eui-YOUR_DEVICE_EUI/up"} 5056 1634364863274
 ```
