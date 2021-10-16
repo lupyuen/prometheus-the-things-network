@@ -165,4 +165,6 @@ l
 
 Click `Execute → Graph`
 
-We should see a graph of the Temperature or Light Level.
+We should see a graph of the Temperature or Light Level...
+
+![Prometheus Graph](https://lupyuen.github.io/images/prometheus-metric.png)
