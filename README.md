@@ -130,3 +130,39 @@ received_messages{status="success",topic="v3/luppy-application@ttn/devices/eui-Y
 # TYPE t gauge
 t{sensor="eui-YOUR_DEVICE_EUI",sensor_type="t",topic="v3/luppy-application@ttn/devices/eui-YOUR_DEVICE_EUI/up"} 5056 1634364863274
 ```
+
+To add the ingested metrics to Prometheus, edit `prometheus.yml`...
+
+```yaml
+scrape_configs:
+  ...
+
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "ttn"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9641"]
+```
+
+To see the ingested metrics in Prometheus, browse to...
+
+http://localhost:9090/
+
+In the query box enter...
+
+```text
+t
+```
+
+Or...
+
+```text
+l
+```
+
+Click `Execute → Graph`
+
+We should see a graph of the Temperature or Light Level.
