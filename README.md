@@ -1,6 +1,18 @@
-# Prometheus Configuration for The Things Network (MQTT)
+# Prometheus and Grafana for The Things Network (MQTT)
+
+![Storing The Things Network Sensor Data with Prometheus](https://lupyuen.github.io/images/grafana-flow2.jpg)
+
+We assume that the Payload Formatter for The Things Network has been configured...
+
+https://github.com/lupyuen/cbor-the-things-network
+
+# Ingest The Things Network MQTT Messages into Prometheus
 
 To ingest MQTT Messages from The Things Network into Prometheus...
+
+Download [`ttn-mqtt.yaml`](ttn-mqtt.yaml) and configure the MQTT Settings.
+
+Download and run `mqtt2prometheus`...
 
 ```bash
 ## Download mqtt2prometheus
@@ -131,6 +143,8 @@ received_messages{status="success",topic="v3/luppy-application@ttn/devices/eui-Y
 t{sensor="eui-YOUR_DEVICE_EUI",sensor_type="t",topic="v3/luppy-application@ttn/devices/eui-YOUR_DEVICE_EUI/up"} 5056 1634364863274
 ```
 
+# Configure Prometheus
+
 To add the ingested metrics to Prometheus, edit `prometheus.yml`...
 
 ```yaml
@@ -168,3 +182,23 @@ Click `Execute → Graph`
 We should see a graph of the Temperature or Light Level...
 
 ![Prometheus Graph](https://lupyuen.github.io/images/prometheus-metric.png)
+
+# Configure Grafana
+
+To add the Prometheus metrics to Grafana, add a Prometheus Data Source with the URL...
+
+```text
+http://localhost:9090
+```
+
+![Prometheus Data Source for Grafana](https://lupyuen.github.io/images/prometheus-grafana2.png)
+
+Add a Grafana Panel with the Prometheus Data Source.
+
+Set the Metric to `t` or `l`...
+
+![Prometheus Panel for Grafana](https://lupyuen.github.io/images/prometheus-grafana3.png)
+
+The Grafana chart appears...
+
+![Prometheus Chart in Grafana](https://lupyuen.github.io/images/prometheus-grafana.png)
