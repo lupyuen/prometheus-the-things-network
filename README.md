@@ -202,3 +202,98 @@ Set the Metric to `t` or `l`...
 The Grafana chart appears...
 
 ![Prometheus Chart in Grafana](https://lupyuen.github.io/images/prometheus-grafana.png)
+
+# MQTT with TLS
+
+To connect to The Things Network MQTT Broker with TLS (so that the MQTT Password won't be transmitted in the clear)...
+
+Edit this source file...
+
+```text
+$GOPATH/src/github.com/hikhvar/mqtt2prometheus/cmd/mqtt2prometheus.go
+```
+
+And modify the `newTLSConfig` function as follows...
+
+```go
+func newTLSConfig(cfg config.Config) (*tls.Config, error) {
+	certpool := x509.NewCertPool()
+	if cfg.MQTT.CACert != "" {
+		pemCerts, err := ioutil.ReadFile(cfg.MQTT.CACert)
+		if err != nil {
+			return nil, fmt.Errorf("failed to load ca_cert file: %w", err)
+		}
+		certpool.AppendCertsFromPEM(pemCerts)
+	}
+
+    // Added this for debugging
+    fmt.Printf("%#v\n", certpool)
+
+    // We don't need to load the Client Cert
+	// cert, err := tls.LoadX509KeyPair(cfg.MQTT.ClientCert, cfg.MQTT.ClientKey)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to load client certificate: %w", err)
+	// }
+	// cert.Leaf, err = x509.ParseCertificate(cert.Certificate[0])
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to parse client certificate: %w", err)
+	// }
+
+	return &tls.Config{
+		RootCAs:            certpool,
+		InsecureSkipVerify: false,
+
+        // We don't need to load the Client Cert
+		// Certificates:       []tls.Certificate{cert},
+	}, nil
+}
+```
+
+Edit [`ttn-mqtt.yaml`](ttn-mqtt.yaml) and configure MQTT as follows...
+
+```yaml
+  ## Change au1.cloud.thethings.network to our MQTT Public Address
+  ## Use ssl://... instead of tcp://...
+  ## Port number is 8883 instead of 1883
+  server: ssl://au1.cloud.thethings.network:8883
+
+  ## For TLS CA Certificates
+  ca_cert: ttn.cer
+  client_cert: certs/xxxxx-certificate.pem.crt
+  client_key: certs/xxxxx-private.pem.key
+```
+
+(`client_cert` and `client_key` won't be used, but they must be uncommented)
+
+To get `ttn.cer`: Browse to your Region-Specific URL for The Things Network, like...
+
+```text
+https://au1.cloud.thethings.network
+```
+
+In the URL Bar, click...
+
+Lock Icon → Connection Is Secure → Certificate Is Valid → Details → Copy To File → Base64 CER
+
+Enter `ttn.cer` as the filename.
+
+Restart `mqtt2prometheus`.
+
+We should see...
+
+```text
+&x509.CertPool{byName:map[string][]int{"0&1$0\"\x06\x03U\x04\x03\x13\x1bau1.cloud.thethings.network":[]int{0}}, lazyCerts:[]x509.lazyCert{x509.lazyCert{rawSubject:[]uint8{0x30, 0x26, 0x31, 0x24, 0x30, 0x22, 0x6, 0x3, 0x55, 0x4, 0x3, 0x13, 0x1b, 0x61, 0x75, 0x31, 0x2e, 0x63, 0x6c, 0x6f, 0x75, 0x64, 0x2e, 0x74, 0x68, 0x65, 0x74, 0x68, 0x69, 0x6e, 0x67, 0x73, 0x2e, 0x6e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b}, getCert:(func() (*x509.Certificate, error))(0x109da20)}}, haveSum:map[x509.sum224]bool{x509.sum224{0x4, 0xc3, 0x5, 0xf6, 0x3f, 0x5b, 0x23, 0xe3, 0xfb, 0xf9, 0x78, 0xd2, 0x49, 0xb4, 0xda, 0xa1, 0x75, 0x13, 0xe4, 0x2b, 0xf4, 0x7c, 0x97, 0x71, 0xf3, 0x67, 0x0, 0xa9}:true}}
+
+mqttclient/mqttClient.go:20      
+Connected to MQTT Broker
+
+web/tls_config.go:191            
+{"level": "info", "msg": "TLS is disabled.", "http2": false}
+
+mqttclient/mqttClient.go:21      
+Will subscribe to topic {"topic": "#"}
+```
+
+In case of problems, use WireShark to troubleshoot the TLS connection...
+
+![Wireshark sniffing MQTT TLS](https://lupyuen.github.io/images/prometheus-wireshark.png)
