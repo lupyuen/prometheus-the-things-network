@@ -4,7 +4,7 @@
 
 We assume that the Payload Formatter for The Things Network has been configured...
 
-https://github.com/lupyuen/cbor-the-things-network
+-   ["CBOR Payload Formatter for The Things Network"](https://lupyuen.github.io/articles/payload)
 
 # Ingest The Things Network MQTT Messages into Prometheus
 
