@@ -155,18 +155,18 @@ t{sensor="eui-YOUR_DEVICE_EUI",
 
 # Configure Prometheus
 
-To add the ingested metrics to Prometheus, edit `prometheus.yml`...
+To add the ingested metrics to Prometheus, edit `prometheus.yml` and add a Scrape Job for `ttn`...
 
 ```yaml
+# Scrape configuration containing the endpoints to scrape
 scrape_configs:
   ...
 
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  # Scrape The Things Network Metrics from MQTT2Prometheus
   - job_name: "ttn"
 
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
-
+    # Metrics will be scraped from MQTT2Prometheus
+    # at http://localhost:9641/metrics
     static_configs:
       - targets: ["localhost:9641"]
 ```
