@@ -1,5 +1,7 @@
 # Prometheus and Grafana for The Things Network (MQTT)
 
+[(Follow the updates on Twitter)](https://twitter.com/MisterTechBlog/status/1450262680795713538)
+
 ![Storing The Things Network Sensor Data with Prometheus](https://lupyuen.github.io/images/grafana-flow2.jpg)
 
 We assume that the Payload Formatter for The Things Network has been configured...
